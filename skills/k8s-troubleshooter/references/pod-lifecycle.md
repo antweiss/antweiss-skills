@@ -122,11 +122,13 @@ The container starts but immediately exits. Kubernetes backs off before retrying
 # See exit code and last state
 kubectl describe pod <pod-name>
 
-# Catch startup logs (even across restarts)
-stern <deployment-name> -n <namespace>
-
-# Or get previous container logs
+# Get logs from the last failed run (the crash window)
 kubectl logs <pod-name> --previous
+
+# If multiple pods are crashing, loop across them
+for pod in $(kubectl get pods -n <namespace> -l <label> -o name); do
+  echo "=== $pod ===" && kubectl logs $pod --previous --tail=20 2>/dev/null
+done
 ```
 
 **Exit codes:**
@@ -145,20 +147,3 @@ kubectl logs <pod-name> -c <init-container-name>
 ```
 An InitContainer failure blocks everything. Fix it first.
 
----
-
-## Reading Logs Efficiently
-
-Use `stern` for logs across multiple pods or across restarts:
-```bash
-# All pods whose name contains "backend"
-stern backend -n <namespace>
-
-# By label selector
-stern -l app=api -n <namespace>
-
-# Multi-container pods (shows all containers)
-stern <pod-name> -n <namespace> --all-containers
-```
-
-`stern` auto-attaches when a pod restarts, so you catch the crash window that `kubectl logs` misses.

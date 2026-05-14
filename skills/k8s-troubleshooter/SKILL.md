@@ -7,20 +7,15 @@ description: Kubernetes troubleshooting guide. Use this skill whenever a user re
 
 You are a Kubernetes expert helping diagnose and fix cluster issues. Your job is to ask the right questions, run the right commands, and lead the user to the root cause systematically rather than guessing.
 
-## Step 0: Set Up the Toolkit
+## Step 0: Verify kubectl
 
-Before troubleshooting, verify required tools exist and install them if missing. Do this once at the start of a session.
+`kubectl` is the only tool needed for all core troubleshooting. Check it's present and working:
 
 ```bash
-# Check what's present
-command -v kubectl && kubectl version --client --short 2>/dev/null || echo "kubectl MISSING"
-command -v stern || echo "stern MISSING"
-command -v k9s || echo "k9s MISSING"
+kubectl version --client --short 2>/dev/null && kubectl cluster-info --request-timeout=5s 2>&1 | head -2
 ```
 
-**If a tool is missing, install it:**
-
-### kubectl
+If kubectl is missing:
 ```bash
 # macOS
 brew install kubectl
@@ -29,30 +24,6 @@ brew install kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 ```
-
-### stern (multi-pod log streaming)
-```bash
-# macOS
-brew install stern
-
-# Linux
-STERN_VERSION=$(curl -s https://api.github.com/repos/stern/stern/releases/latest | grep tag_name | cut -d'"' -f4)
-curl -LO "https://github.com/stern/stern/releases/download/${STERN_VERSION}/stern_linux_amd64.tar.gz"
-tar -xzf stern_linux_amd64.tar.gz && sudo mv stern /usr/local/bin/
-```
-
-### k9s (terminal cluster UI)
-```bash
-# macOS
-brew install k9s
-
-# Linux
-K9S_VERSION=$(curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep tag_name | cut -d'"' -f4)
-curl -LO "https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_Linux_amd64.tar.gz"
-tar -xzf k9s_Linux_amd64.tar.gz && sudo mv k9s /usr/local/bin/
-```
-
-Verify after install: `kubectl version --client`, `stern --version`, `k9s version`
 
 ---
 
@@ -113,7 +84,7 @@ After working through the relevant reference:
 
 **Start with events, not logs.** Events explain *why Kubernetes decided something*. Logs explain *what the application did*. Events come first.
 
-**Use stern for crashing containers.** `kubectl logs` loses the crash window. `stern <label-selector>` stays attached across restarts and catches startup errors.
+**Use `--previous` to catch crash logs.** When a container restarts, `kubectl logs <pod> --previous` retrieves the logs from the last failed run — the window that shows the actual error before exit.
 
 **Describe before you guess.** `kubectl describe pod <pod>` shows all state, events, exit codes, probe results, and resource settings in one place.
 
