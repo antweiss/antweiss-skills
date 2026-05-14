@@ -13,4 +13,6 @@ Claude Code skills marketplace.
 
 ### k8s-troubleshooter
 
-Kubernetes troubleshooting skill. Diagnoses pod failures, networking issues, storage problems, RBAC errors, and node instability. Installs `kubectl`, `stern`, and `k9s` if not found.
+Kubernetes troubleshooting skill. Diagnoses pod failures, networking issues, storage problems, RBAC errors, and node instability. Installs `kubectl` if not found.
+
+Based on [The Ultimate Kubernetes Troubleshooting Guide](https://info.perfectscale.io/kubernetes-troubleshooting-guide) by PerfectScale.
