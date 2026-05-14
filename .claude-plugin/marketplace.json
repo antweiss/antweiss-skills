@@ -1,0 +1,21 @@
+{
+  "name": "antweiss-skills",
+  "owner": {
+    "name": "antweiss"
+  },
+  "metadata": {
+    "description": "Skills by antweiss",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "k8s-troubleshooter",
+      "description": "Kubernetes troubleshooting skill — diagnoses pod failures, networking, storage, RBAC, and node issues. Installs kubectl, stern, and k9s if missing.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/k8s-troubleshooter"
+      ]
+    }
+  ]
+}
