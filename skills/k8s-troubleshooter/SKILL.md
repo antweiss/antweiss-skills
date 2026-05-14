@@ -51,9 +51,15 @@ Events almost always explain *why* Kubernetes made a decision. Read them before 
 
 ---
 
-## Step 2: Navigate to the Right Troubleshooting Domain
+## Step 2: Diagnose and Fix
 
-Based on the symptom, jump to the relevant reference file:
+Use your Kubernetes knowledge to work through the problem from the triage output. Most common issues have clear signals — diagnose and fix them directly without consulting any additional files.
+
+**Only read a reference file if:**
+- The triage output doesn't clearly point to a root cause after 2-3 diagnostic steps, **or**
+- The failure involves an unusual pattern, edge case, or interaction between multiple components
+
+Reference files (consult only when needed):
 
 | Symptom | Reference |
 |---|---|
@@ -71,7 +77,10 @@ If multiple symptoms are present, start with whichever appeared *first* in the e
 
 ## Step 3: Confirm Root Cause and Fix
 
-After working through the relevant reference:
+1. Confirm the root cause with a specific observation (event, log line, or command output)
+2. Apply the fix
+3. Verify recovery: `kubectl get pods -n <namespace> -w` to watch state changes
+4. Check events again after the fix to ensure no new failures
 
 1. Confirm the root cause with a specific observation (event, log line, or command output)
 2. Apply the fix
