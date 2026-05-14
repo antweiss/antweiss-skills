@@ -5,8 +5,8 @@ Claude Code skills marketplace.
 ## Install
 
 ```
-/plugin marketplace add antweiss/antweiss-skills
-/plugin install k8s-troubleshooter@antweiss-skills
+/plugin marketplace add antweiss/claude-skills
+/plugin install k8s-troubleshooter@claude-skills
 ```
 
 ## Skills
